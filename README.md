@@ -77,3 +77,28 @@ assistive fact-checking tool rather than an absolute source of truth.
 - Streamlit
 - Tavily Web Search
 - Google Gemini
+
+
+## 🔑 API Keys Required
+
+This project uses **Tavily Web Search API** and **Google Gemini API** for real-time news verification and AI-based analysis.
+
+Before running the project, you need to create API keys for both services.
+
+### 1. Get Tavily API Key
+Create an account on Tavily and generate your API key.
+
+### 2. Get Google Gemini API Key
+Create an API key from Google AI Studio.
+
+### 3. Create `.env` file
+
+Inside the project folder, create a file named:
+
+`.env`
+
+Add your keys in this format:
+
+```env
+TAVILY_API_KEY=your_tavily_api_key
+GEMINI_API_KEY=your_gemini_api_key
