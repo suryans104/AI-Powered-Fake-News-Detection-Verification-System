@@ -102,3 +102,9 @@ Add your keys in this format:
 ```env
 TAVILY_API_KEY=your_tavily_api_key
 GEMINI_API_KEY=your_gemini_api_key
+
+
+## 🚀 Live Project
+
+[Open AI Fake News Detector]
+ (https://ai-powered-fake-news-detection-cara.onrender.com)
