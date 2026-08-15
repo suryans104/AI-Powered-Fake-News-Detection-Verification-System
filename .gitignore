@@ -1,0 +1,4 @@
+.env
+News_Dataset/
+.ipynb_checkpoints/
+.virtual_documents/
