@@ -135,7 +135,13 @@ st.markdown("""
     text-decoration: none;
     font-size: 14px;
 }
+.title{
+font-size:50px;
+}
+.subtitle{
+    font-size: 20px;
 
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -180,11 +186,11 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 # NEWS INPUT
 # =========================
 
-st.subheader("Enter News or Claim")
+st.subheader("Enter Your News ")
 
 news = st.text_area(
-    "Paste the news/claim you want to verify:",
-    height=150,
+    "Paste the news you want to verify:",
+    height=100,
     placeholder="XYZ"
 )
 
@@ -231,10 +237,10 @@ if st.button("🔍 Check News", use_container_width=True):
         for result in response["results"]:
 
             evidence += f"""
-Source: {result['title']}
-URL: {result['url']}
-Content: {result['content'][:1000]}
-"""
+        Source: {result['title']}
+        URL: {result['url']}
+        Content: {result['content'][:1000]}
+        """
 
         # =========================
         # GEMINI
@@ -280,139 +286,129 @@ List the important sources used.
             )
 
             final_answer = interaction.output_text
-# =========================
-# RESULTS
-# =========================
+            # =========================
+            # RESULTS
+            # =========================
 
-st.divider()
+            st.divider()
 
-st.subheader("🔎 Fact Check Result")
+            st.subheader("🔎 Fact Check Result")
 
-# -------------------------
-# VERDICT
-# -------------------------
+            # -------------------------
+            # VERDICT
+            # -------------------------
 
-if "FINAL VERDICT: TRUE" in final_answer.upper():
-    verdict = "TRUE"
-    verdict_icon = "✅"
-elif "FINAL VERDICT: FALSE" in final_answer.upper():
-    verdict = "FALSE"
-    verdict_icon = "❌"
-else:
-    verdict = "UNCERTAIN"
-    verdict_icon = "⚠️"
+            if "FINAL VERDICT: TRUE" in final_answer.upper():
+                verdict = "TRUE"
+                verdict_icon = "✅"
+            elif "FINAL VERDICT: FALSE" in final_answer.upper():
+                verdict = "FALSE"
+                verdict_icon = "❌"
+            else:
+                verdict = "UNCERTAIN"
+                verdict_icon = "⚠️"
 
-# -------------------------
-# RESULT CARD
-# -------------------------
+            # -------------------------
+            # RESULT CARD
+            # -------------------------
 
-if verdict == "TRUE":
-    verdict_class = "true-card"
-elif verdict == "FALSE":
-    verdict_class = "false-card"
-else:
-    verdict_class = "uncertain-card"
+            if verdict == "TRUE":
+                verdict_class = "true-card"
+            elif verdict == "FALSE":
+                verdict_class = "false-card"
+            else:
+                verdict_class = "uncertain-card"
 
-st.markdown(
-    f"""
-    <div class="verdict-card {verdict_class}">
-        <div class="verdict-icon">{verdict_icon}</div>
-        <div>
-            <div class="verdict-label">FINAL VERDICT</div>
-            <div class="verdict-text">{verdict}</div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# -------------------------
-# ML PREDICTION
-# -------------------------
-
-st.markdown(
-    f"""
-    <div class="info-card">
-        <div class="card-title">🤖 Machine Learning Prediction</div>
-        <div class="ml-result">{ml_result}</div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# -------------------------
-# AI ANALYSIS
-# -------------------------
-
-st.markdown(
-    """
-    <div class="section-title">🧠 AI Analysis</div>
-    """,
-    unsafe_allow_html=True
-)
-
-# Remove verdict and ML prediction from Gemini output
-clean_answer = final_answer
-
-clean_answer = clean_answer.replace(
-    "FINAL VERDICT: TRUE", ""
-).replace(
-    "FINAL VERDICT: FALSE", ""
-).replace(
-    "FINAL VERDICT: UNCERTAIN", ""
-)
-
-clean_answer = clean_answer.replace(
-    f"ML PREDICTION: {ml_result}", ""
-)
-
-# Remove SOURCES section because sources are shown separately
-if "SOURCES:" in clean_answer:
-    clean_answer = clean_answer.split("SOURCES:")[0]
-
-clean_answer = clean_answer.replace("EXPLANATION:", "").strip()
-
-st.markdown(
-    f"""
-    <div class="explanation-card">
-        {clean_answer}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# -------------------------
-# WEB SOURCES
-# -------------------------
-
-st.markdown(
-    """
-    <div class="section-title">🌐 Web Sources</div>
-    """,
-    unsafe_allow_html=True
-)
-
-for i, result in enumerate(response["results"], 1):
-
-    st.markdown(
-        f"""
-        <div class="source-card">
-
-            <div class="source-number">{i}</div>
-
-            <div class="source-content">
-
-                <div class="source-title">
-                    {result['title']}
+            st.markdown(
+                f"""
+                <div class="verdict-card {verdict_class}">
+                    <div class="verdict-icon">{verdict_icon}</div>
+                    <div>
+                        <div class="verdict-label">FINAL VERDICT</div>
+                        <div class="verdict-text">{verdict}</div>
+                    </div>
                 </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-                <a href="{result['url']}" target="_blank">
-                    🔗 Open Source
-                </a>
+            # -------------------------
+            # ML PREDICTION
+            # -------------------------
 
-            </div>
+            st.markdown(
+                f"""
+                <div class="info-card">
+                    <div class="card-title">🤖 Machine Learning Prediction</div>
+                    <div class="ml-result">{ml_result}</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            # -------------------------
+            # AI ANALYSIS
+            # -------------------------
+
+            st.markdown(
+                """
+                <div class="section-title">🧠 AI Analysis</div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            # Remove verdict and ML prediction from Gemini output
+            clean_answer = final_answer
+
+            clean_answer = clean_answer.replace(
+                "FINAL VERDICT: TRUE", ""
+            ).replace(
+                "FINAL VERDICT: FALSE", ""
+            ).replace(
+                "FINAL VERDICT: UNCERTAIN", ""
+            )
+
+            clean_answer = clean_answer.replace(
+                f"ML PREDICTION: {ml_result}", ""
+            )
+
+            # Remove SOURCES section because sources are shown separately
+            if "SOURCES:" in clean_answer:
+                clean_answer = clean_answer.split("SOURCES:")[0]
+
+            clean_answer = clean_answer.replace("EXPLANATION:", "").strip()
+
+            st.markdown(
+                f"""
+                <div class="explanation-card">
+                    {clean_answer}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            # -------------------------
+            # WEB SOURCES
+            # -------------------------
+
+            st.markdown("### 🌐 Web Sources")
+
+            with st.container(border=True):
+
+                for i, result in enumerate(response["results"], 1):
+
+                    st.markdown(f"**{i}. {result['title']}**")
+
+                    st.markdown(
+                        f"[🔗 Open Source]({result['url']})"
+                    )
+
+                    if i < len(response["results"]):
+                        st.divider()
+
+            st.info(
+            "ℹ️ **Disclaimer:** The Machine Learning prediction is based on a "
+            "previously trained dataset and may not reflect the latest information. "
+            "For current fact verification, please rely primarily on the **Final Verdict**, "
+            "which is generated by analyzing the latest web evidence using Generative AI."
+)
